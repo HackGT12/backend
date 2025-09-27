@@ -1,7 +1,7 @@
 // server.js
 import dotenv from 'dotenv';
 import path from 'path';
-dotenv.config({ path: path.join(process.cwd(), '..', '.env') });
+dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 import express from "express";
 import { WebSocketServer } from "ws";

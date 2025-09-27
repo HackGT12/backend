@@ -1,7 +1,7 @@
 import fetch from "node-fetch";
 
 export async function fetchGameData() {
-  const url = "https://api.sportradar.com/nfl/official/trial/v7/en/games/ca9d8f84-8e7b-4ee7-a310-54c2e3ca4edc/pbp.json?api_key=IBmP6JwSOEdQhilLQcwmA1KD7GFr8lTqcOyCEtDQ";
+  const url = "https://api.sportradar.com/nfl/official/trial/v7/en/games/0ab5e37d-0f79-40c6-b536-ff88c7be5286/pbp.json?api_key=IBmP6JwSOEdQhilLQcwmA1KD7GFr8lTqcOyCEtDQ";
 
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to fetch game: ${res.status} ${res.statusText}`);

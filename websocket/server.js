@@ -48,6 +48,8 @@ setInterval(async () => {
       gameId: "superbowl", // placeholder
       payload: play,
       activeMicroBetId: activeMicroBet ? activeMicroBet.id : null,
+      homeTeamScore: play.home_points || 0,
+      awayTeamScore: play.away_points || 0,
     };
 
     broadcast(event);

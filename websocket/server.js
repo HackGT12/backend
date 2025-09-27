@@ -10,10 +10,10 @@ import { initializeFirebase, createMicroBet, updateMicroBetWithAnswer } from "..
 
 // === CONFIG ===
 const PORT = 8080;
-const LOOP_INTERVAL = 10000; // 10s per play
+const LOOP_INTERVAL = 10000; 
 
 const app = express();
-const wss = new WebSocketServer({ port: PORT });
+const wss = new WebSocketServer({ port: 8080, host: "0.0.0.0" });
 
 let plays = [];
 let playIndex = 0;

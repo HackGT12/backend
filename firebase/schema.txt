@@ -1,0 +1,17 @@
+Firebase Collections:
+
+plays/
+├── type: string ("play")
+├── timestamp: string (ISO format)
+├── gameId: string
+├── payload: object (play data from Sportradar)
+├── createdAt: timestamp (server timestamp)
+
+Example document:
+{
+  "type": "play",
+  "timestamp": "2025-01-27T10:30:00.000Z",
+  "gameId": "gt-vs-uga-2025",
+  "payload": { /* Sportradar play data */ },
+  "createdAt": "2025-01-27T10:30:00.123Z"
+}

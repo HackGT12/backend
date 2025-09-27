@@ -71,6 +71,8 @@ export async function createMicroBet(recentPlays) {
     }
 
     microBet.status = "active";
+    microBet.league = "nfl";
+    microBet.game = process.env.GAME_ID || "superbowl";
     microBet.createdAt = admin.firestore.FieldValue.serverTimestamp();
 
     const docRef = await db.collection('microBets').add(microBet);

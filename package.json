@@ -5,6 +5,7 @@
     "express": "^5.1.0",
     "firebase-admin": "^13.5.0",
     "node-fetch": "^3.3.2",
+    "openai": "^5.23.1",
     "ws": "^8.18.3"
   }
 }

@@ -6,17 +6,19 @@ dotenv.config({ path: path.join(process.cwd(), '..', '.env') });
 import express from "express";
 import { WebSocketServer } from "ws";
 import { fetchGameData } from "./gameFetcher.js";
-import { initializeFirebase, createMicroBet } from "../firebase/firebaseService.js";
+import { initializeFirebase, createMicroBet, updateMicroBetWithAnswer } from "../firebase/firebaseService.js";
 
 // === CONFIG ===
 const PORT = 8080;
-const LOOP_INTERVAL = 4000; // 4s per play
+const LOOP_INTERVAL = 10000; // 10s per play
 
 const app = express();
 const wss = new WebSocketServer({ port: PORT });
 
 let plays = [];
 let playIndex = 0;
+let recentPlays = [];
+let activeMicroBet = null;
 
 // === ON STARTUP: FETCH GAME DATA & INIT FIREBASE ===
 (async () => {
@@ -43,19 +45,35 @@ setInterval(async () => {
     const event = {
       type: "play",
       timestamp: new Date().toISOString(),
-      gameId: "gt-vs-uga-2025", // placeholder
+      gameId: "superbowl", // placeholder
       payload: play,
     };
 
     broadcast(event);
     console.log("📡 Sent event:", event);
 
-    // Create microbet every 10 plays
-    if (playIndex % 10 === 0) {
+    // Track recent plays
+    recentPlays.push(event);
+    if (recentPlays.length > 3) {
+      recentPlays.shift();
+    }
+
+    // Create microbet every 3 plays (at the end of 3rd play)
+    if (playIndex % 3 === 2) {
       try {
-        await createMicroBet(Math.floor(playIndex / 10));
+        activeMicroBet = await createMicroBet(recentPlays);
       } catch (error) {
         console.error('Failed to create microbet:', error.message);
+      }
+    }
+
+    // Close microbet after the next play (this play determines the answer)
+    if (playIndex % 3 === 0 && activeMicroBet) {
+      try {
+        await updateMicroBetWithAnswer(activeMicroBet.id, event, activeMicroBet);
+        activeMicroBet = null;
+      } catch (error) {
+        console.error('Failed to close microbet:', error.message);
       }
     }
 

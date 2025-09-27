@@ -47,6 +47,7 @@ setInterval(async () => {
       timestamp: new Date().toISOString(),
       gameId: "superbowl", // placeholder
       payload: play,
+      activeMicroBetId: activeMicroBet ? activeMicroBet.id : null,
     };
 
     broadcast(event);

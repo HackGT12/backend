@@ -54,6 +54,7 @@ setInterval(async () => {
       homeTeamName: "Falcons",
       awayTeamName: "Buccaneers",
       totalMoneyDonated: totalMoneyDonated,
+      playsUntilMicro: 2 - (playIndex % 3),
     };
 
     broadcast(event);

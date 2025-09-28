@@ -69,6 +69,13 @@ setInterval(async () => {
     if (playIndex % 3 === 2) {
       try {
         activeMicroBet = await createMicroBet(recentPlays);
+        if (activeMicroBet) {
+          const microbetEvent = {
+            type: "microbet_created",
+            microbetId: activeMicroBet.id
+          };
+          broadcast(microbetEvent);
+        }
       } catch (error) {
         console.error('Failed to create microbet:', error.message);
       }

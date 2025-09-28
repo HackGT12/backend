@@ -19,6 +19,7 @@ let plays = [];
 let playIndex = 0;
 let recentPlays = [];
 let activeMicroBet = null;
+let totalMoneyDonated = 0;
 
 // === ON STARTUP: FETCH GAME DATA & INIT FIREBASE ===
 (async () => {
@@ -50,6 +51,7 @@ setInterval(async () => {
       activeMicroBetId: activeMicroBet ? activeMicroBet.id : null,
       homeTeamScore: play.home_points || 0,
       awayTeamScore: play.away_points || 0,
+      totalMoneyDonated: totalMoneyDonated,
     };
 
     broadcast(event);
@@ -73,7 +75,10 @@ setInterval(async () => {
     // Close microbet after the next play (this play determines the answer)
     if (playIndex % 3 === 0 && activeMicroBet) {
       try {
-        await updateMicroBetWithAnswer(activeMicroBet.id, event, activeMicroBet);
+        const donation = await updateMicroBetWithAnswer(activeMicroBet.id, event, activeMicroBet);
+        if (donation) {
+          totalMoneyDonated += donation;
+        }
         activeMicroBet = null;
       } catch (error) {
         console.error('Failed to close microbet:', error.message);

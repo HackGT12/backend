@@ -169,12 +169,16 @@ Return ONLY valid JSON:
 
     const result = JSON.parse(response.choices[0].message.content);
     
-    // Calculate donation based on answer
+    // Calculate donation based on answer and votes
     let donation;
     if (result.answer === "opt3") {
       donation = Math.floor(microBet.maxDonation / 2);
     } else {
-      donation = Math.floor(Math.random() * (microBet.maxDonation - 100) + 100);
+      // Find winning option and calculate donation based on vote percentage
+      const winningOption = microBet.options.find(opt => opt.id === result.answer);
+      const totalVotes = microBet.options.reduce((sum, opt) => sum + opt.votes, 0);
+      const votePercentage = totalVotes > 0 ? winningOption.votes / totalVotes : 0.5;
+      donation = Math.floor(microBet.maxDonation * votePercentage);
     }
     
     await db.collection('microBets').doc(betId).update({
@@ -184,6 +188,8 @@ Return ONLY valid JSON:
       status: "closed",
       closedAt: admin.firestore.FieldValue.serverTimestamp()
     });
+    
+    return donation;
 
     console.log('✅ MicroBet closed:', betId, 'Question:', microBet.question, 'Answer:', result.answer, 'Action:', result.actionDescription);
   } catch (error) {
